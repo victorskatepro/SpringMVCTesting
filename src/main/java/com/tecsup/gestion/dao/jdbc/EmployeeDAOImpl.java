@@ -1,6 +1,7 @@
 package com.tecsup.gestion.dao.jdbc;
 import java.util.List;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.tecsup.gestion.exception.DAOException;
 import com.tecsup.gestion.exception.EmptyResultException;
 import com.tecsup.gestion.mapper.EmployeeMapper;
 import com.tecsup.gestion.model.Employee;
+import com.tecsup.gestion.exception.LoginException;
 
 @Repository
 public class EmployeeDAOImpl implements EmployeeDAO {
@@ -86,20 +88,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 	}
 
-	@Override
-	public void update(String  login, String password, String lastname, String firstname, int salary, int dptId) throws DAOException {
-
-		String query = "UPDATE employees SET password = ?, first_name =?, last_name = ?, salary = ?, department_id = ? WHERE login = ?";
-
-		Object[] params = new Object[] { password, lastname, firstname, salary, dptId, login };
-
-		try {
-			jdbcTemplate.update(query, params);
-		} catch (Exception e) {
-			logger.info("Error: " + e.getMessage());
-			throw new DAOException(e.getMessage());
-		}
-	}
 
 
 	@Override
@@ -135,6 +123,21 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		logger.info("Error: "+ e.getMessage());
 		throw new DAOException(e.getMessage());
 	}
+	}
+	@Override
+	public Employee finEmployeeBynameandlastanme(String firstname, String lastname, int dptID) 
+			throws DAOException, EmptyResultException {
+		String query = "SELECT employee_id, login, password, first_name, last_name, salary, department_id FROM employees where first_name=? AND last_name = ? AND department_id = ?";
+		Object[] params = new Object[] { firstname, lastname, dptID};
+		try {
+			Employee employee = jdbcTemplate.queryForObject(query, params, new EmployeeMapper());
+			return employee;
+		}catch (EmptyResultDataAccessException e) {
+			throw new EmptyResultException();
+		}catch (Exception e) {
+			logger.info("Error: " + e.getMessage());
+			throw new DAOException(e.getMessage());
+		}
 	}
 	@Override
 	public List<Employee> findAllEmployees() throws DAOException, EmptyResultException {
@@ -175,6 +178,53 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			throw new DAOException(e.getMessage());
 		}
 	}
+	public Employee validate(String login, String pwd) throws LoginException, DAOException {
+		
+		logger.info("validate(): login: " + login + ", clave: " + pwd);
+	
+		if ("".equals(login) && "".equals(pwd)) {
+			throw new LoginException("Login and password incorrect");
+		}
+	
+		String query = "SELECT login, password, employee_id, first_name, last_name, salary, department_id  "
+				+ " FROM employees WHERE login=? AND password=?";
+	
+		Object[] params = new Object[] { login, pwd };
+	
+		try {
+	
+			Employee emp = (Employee) jdbcTemplate.queryForObject(query, params, new EmployeeMapper());
+			//
+			return emp;
+	
+		} catch (EmptyResultDataAccessException e) {
+			logger.info("Employee y/o clave incorrecto");
+			throw new LoginException();
+		} catch (Exception e) {
+			logger.info("Error: " + e.getMessage());
+			throw new DAOException(e.getMessage());
+		}
+	}
+	@Override
+	public void update(String  login, String password, String lastname, String firstname, int salary, int dptId) throws DAOException {
+
+
+		String query = "UPDATE employees SET password = ?, first_name =?, last_name = ?, salary = ? WHERE login = ?";
+
+		Object[] params = new Object[] { password, lastname, firstname, salary, login };
+
+		
+		try {
+			jdbcTemplate.update(query, params);
+		} catch (Exception e) {
+			logger.info("Error: " + e.getMessage());
+			throw new DAOException(e.getMessage());
+		}
+	}
+
+
+	
+
 
 
 }

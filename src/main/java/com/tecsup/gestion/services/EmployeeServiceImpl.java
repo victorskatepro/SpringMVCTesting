@@ -1,5 +1,7 @@
 package com.tecsup.gestion.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return emp;
 	}
+	
+	public List<Employee> findAll()throws DAOException, EmptyResultException{
+		List<Employee> emps = employeeDAO.findAllEmployees();
+		return emps;
+	}
+
+	@Override
+	public void update(String login, String password, String lastname, String firstname, int salary, int dptId)
+			throws DAOException {
+	
+		employeeDAO.update(login, password, lastname, firstname, salary, dptId);
+	}
+	
 
 }
