@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import com.tecsup.gestion.dao.EmployeeDAO;
 import com.tecsup.gestion.exception.DAOException;
 import com.tecsup.gestion.exception.EmptyResultException;
+import com.tecsup.gestion.mapper.DepartmentMapper;
 import com.tecsup.gestion.mapper.EmployeeMapper;
+import com.tecsup.gestion.model.Department;
 import com.tecsup.gestion.model.Employee;
 import com.tecsup.gestion.exception.LoginException;
 
@@ -221,6 +223,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			throw new DAOException(e.getMessage());
 		}
 	}
+
+
+	
 
 
 	

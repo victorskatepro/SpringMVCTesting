@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.tecsup.gestion.dao.EmployeeDAO;
 import com.tecsup.gestion.exception.DAOException;
 import com.tecsup.gestion.exception.EmptyResultException;
+import com.tecsup.gestion.model.Department;
 import com.tecsup.gestion.model.Employee;
 
 @Service
@@ -15,6 +16,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private EmployeeDAO employeeDAO;
+	
 
 	@Override
 	public Employee find(int employee_id) throws DAOException, EmptyResultException {
@@ -35,6 +37,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 		employeeDAO.update(login, password, lastname, firstname, salary, dptId);
 	}
+	@Override
+	public void delete(String login) throws DAOException {
+		 
+		employeeDAO.delete(login);
 	
+	}
+
+	@Override
+	public void create(String login, String password, String lastname, String firstname, int salary, int dptId)
+			throws DAOException {
+	
+		employeeDAO.create(login, password, lastname, firstname, salary, dptId);
+
+	}
+
+	
+
 
 }

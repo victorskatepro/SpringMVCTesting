@@ -26,7 +26,7 @@
 								class="btn btn-primary"> Manager Employees</a>
 							</td>
 							<td>
-								<a href="<%=request.getContextPath()%>/admin/dpto/list"
+								<a href="<%=request.getContextPath()%>/admin/dpto/listdepart"
 								class="btn btn-primary"> Manager Departments</a>
 							</td>
 							<td>
